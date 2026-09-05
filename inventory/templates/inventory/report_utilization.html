@@ -1,0 +1,28 @@
+{% extends "inventory/base.html" %}
+{% block title %}Utilization Report{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Complex Query · Equipment + Category + Booking (aggregated)</div>
+      <h2>Equipment Utilization</h2>
+    </div>
+  </div>
+  {% if rows %}
+  <table>
+    <tr><th>Equipment</th><th>Category</th><th>Total Bookings</th><th>Late Returns</th><th>Total Late Fees</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.equipment_name }}</td>
+      <td>{{ r.category_name }}</td>
+      <td>{{ r.total_bookings }}</td>
+      <td>{{ r.late_returns }}</td>
+      <td>${{ r.total_late_fees }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No equipment recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

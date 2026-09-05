@@ -1,0 +1,27 @@
+{% extends "inventory/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Overview</div>
+      <h2>Workshop Status</h2>
+    </div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="num">{{ member_count }}</div><div class="label">Members</div></div>
+    <div class="stat"><div class="num">{{ equipment_count }}</div><div class="label">Equipment Items</div></div>
+    <div class="stat"><div class="num">{{ active_bookings }}</div><div class="label">Active Bookings</div></div>
+    <div class="stat"><div class="num">{{ overdue_count }}</div><div class="label">Overdue Now</div></div>
+  </div>
+</div>
+<div class="panel">
+  <div class="panel-header"><h2>Quick actions</h2></div>
+  <div class="actions-row">
+    <a class="btn" href="{% url 'booking_new' %}">+ New Booking</a>
+    <a class="btn secondary" href="{% url 'member_new' %}">+ New Member</a>
+    <a class="btn secondary" href="{% url 'equipment_new' %}">+ New Equipment</a>
+    <a class="btn secondary" href="{% url 'maintenance_new' %}">+ Log Maintenance</a>
+  </div>
+</div>
+{% endblock %}

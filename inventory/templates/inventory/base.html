@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Forge{% endblock %} · Makerspace Booking</title>
+<style>
+  :root {
+    --blueprint: #10233d;
+    --blueprint-line: #21456f;
+    --paper: #f2ede2;
+    --panel: #ffffff;
+    --ink: #14202e;
+    --muted: #5c6a7a;
+    --amber: #e08d2c;
+    --amber-dark: #b96f18;
+    --ok: #2f7a4f;
+    --danger: #b23a2f;
+    --radius: 3px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Iowan Old Style", "Georgia", serif;
+    background: var(--paper);
+    color: var(--ink);
+    background-image:
+      linear-gradient(var(--blueprint-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+    background-color: var(--paper);
+    background-blend-mode: overlay;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background: var(--paper);
+    opacity: 0.94;
+    z-index: -1;
+  }
+  header.top {
+    background: var(--blueprint);
+    color: #dce8f5;
+    padding: 18px 32px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 4px solid var(--amber);
+  }
+  header.top .brand {
+    font-family: "Courier New", monospace;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #9fb8d1;
+  }
+  header.top h1 {
+    margin: 2px 0 0 0;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  nav.tabs {
+    background: #0c1c30;
+    display: flex;
+    gap: 2px;
+    padding: 0 32px;
+    overflow-x: auto;
+  }
+  nav.tabs a {
+    color: #a9bdd2;
+    text-decoration: none;
+    font-family: "Courier New", monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+  }
+  nav.tabs a:hover { color: #fff; border-bottom-color: var(--blueprint-line); }
+  nav.tabs a.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 32px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid #d8cfba;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e6ddc8;
+    padding-bottom: 10px;
+  }
+  .panel-header h2 { margin: 0; font-size: 18px; }
+  .eyebrow {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid #ece5d3; }
+  th {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  tr:hover td { background: #faf7ee; }
+
+  .btn {
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--amber-dark);
+    background: var(--amber);
+    color: #241304;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--amber-dark); color: #fff; }
+  .btn.secondary { background: transparent; color: var(--blueprint); border-color: #c8bd9e; }
+  .btn.secondary:hover { background: #ece5d3; }
+  .btn.danger { background: var(--danger); border-color: #7d281f; color: #fff; }
+  .btn.small { padding: 4px 9px; font-size: 11px; }
+
+  .badge {
+    display: inline-block;
+    font-family: "Courier New", monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid;
+  }
+  .badge.available, .badge.returned, .badge.active { color: var(--ok); border-color: var(--ok); background: #eaf5ee; }
+  .badge.booked { color: var(--amber-dark); border-color: var(--amber-dark); background: #fbf1e2; }
+  .badge.maintenance, .badge.overdue { color: var(--danger); border-color: var(--danger); background: #fbeae8; }
+  .badge.cancelled, .badge.retired { color: var(--muted); border-color: var(--muted); background: #f0efe9; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat {
+    background: var(--blueprint);
+    color: #dce8f5;
+    padding: 18px;
+    border-radius: var(--radius);
+    border-bottom: 3px solid var(--amber);
+  }
+  .stat .num { font-size: 30px; font-weight: 700; font-family: Georgia, serif; }
+  .stat .label { font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #9fb8d1; margin-top: 4px; }
+
+  form p { margin: 14px 0; }
+  form label { display: block; font-family: "Courier New", monospace; font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  form input, form select, form textarea {
+    width: 100%; padding: 9px 10px; border: 1px solid #c8bd9e; border-radius: var(--radius);
+    font-family: Georgia, serif; font-size: 14.5px; background: #fffdf8;
+  }
+  form input:focus, form select:focus, form textarea:focus { outline: 2px solid var(--amber); border-color: var(--amber); }
+
+  .messages { list-style: none; padding: 0; margin: 0 0 20px 0; }
+  .messages li { padding: 10px 14px; border-radius: var(--radius); margin-bottom: 8px; font-size: 14px; }
+  .messages li.success { background: #eaf5ee; color: var(--ok); border: 1px solid var(--ok); }
+  .messages li.error { background: #fbeae8; color: var(--danger); border: 1px solid var(--danger); }
+
+  .empty { color: var(--muted); font-style: italic; padding: 20px 0; }
+  .actions-row { display: flex; gap: 8px; align-items: center; }
+  footer { text-align: center; padding: 24px; color: var(--muted); font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <div class="brand">DBMS · Enterprise App Assignment</div>
+    <h1>The Forge — Makerspace Equipment Booking</h1>
+  </div>
+</header>
+<nav class="tabs">
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'member_list' %}">Members</a>
+  <a href="{% url 'category_list' %}">Categories</a>
+  <a href="{% url 'equipment_list' %}">Equipment</a>
+  <a href="{% url 'booking_list' %}">Bookings</a>
+  <a href="{% url 'maintenance_list' %}">Maintenance</a>
+  <a href="{% url 'report_overdue' %}">Overdue Report</a>
+  <a href="{% url 'report_utilization' %}">Utilization Report</a>
+</nav>
+<main>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer>Sem 4 DBMS — Enterprise Application Development Assignment</footer>
+</body>
+</html>

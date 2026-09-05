@@ -1,0 +1,46 @@
+{% extends "inventory/base.html" %}
+{% block title %}Bookings{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Table</div>
+      <h2>Bookings</h2>
+    </div>
+    <a class="btn" href="{% url 'booking_new' %}">+ New Booking</a>
+  </div>
+  {% if bookings %}
+  <table>
+    <tr><th>Member</th><th>Equipment</th><th>Due</th><th>Returned</th><th>Status</th><th>Late Fee</th><th></th></tr>
+    {% for b in bookings %}
+    <tr>
+      <td>{{ b.member.full_name }}</td>
+      <td>{{ b.equipment.name }}</td>
+      <td>{{ b.due_date }}</td>
+      <td>{{ b.return_date|default:"—" }}</td>
+      <td><span class="badge {{ b.status|lower }}">{{ b.get_status_display }}</span></td>
+      <td>${{ b.late_fee }}</td>
+      <td class="actions-row">
+        {% if b.status == "ACTIVE" or b.status == "OVERDUE" %}
+        <form method="post" action="{% url 'booking_return' b.booking_id %}" style="display:inline;">
+          {% csrf_token %}
+          <button class="btn small" type="submit">Return</button>
+        </form>
+        <form method="post" action="{% url 'booking_cancel' b.booking_id %}" style="display:inline;" onsubmit="return confirm('Cancel this booking?');">
+          {% csrf_token %}
+          <button class="btn small secondary" type="submit">Cancel</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{% url 'booking_delete' b.booking_id %}" style="display:inline;" onsubmit="return confirm('Delete this booking record?');">
+          {% csrf_token %}
+          <button class="btn small danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No bookings yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

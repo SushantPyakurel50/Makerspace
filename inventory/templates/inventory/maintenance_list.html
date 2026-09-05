@@ -1,0 +1,36 @@
+{% extends "inventory/base.html" %}
+{% block title %}Maintenance{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Table</div>
+      <h2>Maintenance Records</h2>
+    </div>
+    <a class="btn" href="{% url 'maintenance_new' %}">+ Log Issue</a>
+  </div>
+  {% if records %}
+  <table>
+    <tr><th>Equipment</th><th>Reported</th><th>Description</th><th>Resolved</th><th></th></tr>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.equipment.name }}</td>
+      <td>{{ r.reported_date }}</td>
+      <td>{{ r.description }}</td>
+      <td>{{ r.resolved_date|default:"Open" }}</td>
+      <td class="actions-row">
+        {% if not r.resolved_date %}
+        <form method="post" action="{% url 'maintenance_resolve' r.record_id %}" style="display:inline;">
+          {% csrf_token %}
+          <button class="btn small" type="submit">Mark Resolved</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No maintenance records yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

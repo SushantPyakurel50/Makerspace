@@ -1,0 +1,33 @@
+{% extends "inventory/base.html" %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Table</div>
+      <h2>Categories</h2>
+    </div>
+    <a class="btn" href="{% url 'category_new' %}">+ New Category</a>
+  </div>
+  {% if categories %}
+  <table>
+    <tr><th>Name</th><th>Description</th><th></th></tr>
+    {% for c in categories %}
+    <tr>
+      <td>{{ c.category_name }}</td>
+      <td>{{ c.description|default:"—" }}</td>
+      <td class="actions-row">
+        <a class="btn small secondary" href="{% url 'category_edit' c.category_id %}">Edit</a>
+        <form method="post" action="{% url 'category_delete' c.category_id %}" style="display:inline;" onsubmit="return confirm('Delete this category?');">
+          {% csrf_token %}
+          <button class="btn small danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No categories yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

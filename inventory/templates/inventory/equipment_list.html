@@ -1,0 +1,37 @@
+{% extends "inventory/base.html" %}
+{% block title %}Equipment{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Table</div>
+      <h2>Equipment</h2>
+    </div>
+    <a class="btn" href="{% url 'equipment_new' %}">+ New Equipment</a>
+  </div>
+  {% if equipment_items %}
+  <table>
+    <tr><th>Name</th><th>Category</th><th>Serial #</th><th>Status</th><th>Replacement Cost</th><th></th></tr>
+    {% for e in equipment_items %}
+    <tr>
+      <td>{{ e.name }}</td>
+      <td>{{ e.category.category_name }}</td>
+      <td>{{ e.serial_number }}</td>
+      <td><span class="badge {{ e.status|lower }}">{{ e.get_status_display }}</span></td>
+      <td>${{ e.replacement_cost }}</td>
+      <td class="actions-row">
+        <a class="btn small secondary" href="{% url 'equipment_maintenance' e.equipment_id %}">Maintenance</a>
+        <a class="btn small secondary" href="{% url 'equipment_edit' e.equipment_id %}">Edit</a>
+        <form method="post" action="{% url 'equipment_delete' e.equipment_id %}" style="display:inline;" onsubmit="return confirm('Delete this equipment?');">
+          {% csrf_token %}
+          <button class="btn small danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No equipment yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

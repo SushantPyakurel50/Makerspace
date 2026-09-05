@@ -1,0 +1,29 @@
+{% extends "inventory/base.html" %}
+{% block title %}{{ member.full_name }} — Bookings{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Query · Member → Booking → Equipment → Category</div>
+      <h2>{{ member.full_name }}'s Bookings</h2>
+    </div>
+    <a class="btn secondary" href="{% url 'member_list' %}">Back to Members</a>
+  </div>
+  {% if rows %}
+  <table>
+    <tr><th>Equipment</th><th>Category</th><th>Booked</th><th>Due</th><th>Status</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.equipment_name }}</td>
+      <td>{{ r.category_name }}</td>
+      <td>{{ r.booking_date }}</td>
+      <td>{{ r.due_date }}</td>
+      <td><span class="badge {{ r.status|lower }}">{{ r.status }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">This member has no bookings yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

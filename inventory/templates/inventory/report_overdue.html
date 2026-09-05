@@ -1,0 +1,29 @@
+{% extends "inventory/base.html" %}
+{% block title %}Overdue Report{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Complex Query · Booking + Member + Equipment + Category</div>
+      <h2>Overdue Bookings</h2>
+    </div>
+  </div>
+  {% if rows %}
+  <table>
+    <tr><th>Member</th><th>Contact</th><th>Equipment</th><th>Category</th><th>Due</th><th>Days Overdue</th></tr>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.member_name }}</td>
+      <td>{{ r.member_email }}</td>
+      <td>{{ r.equipment_name }}</td>
+      <td>{{ r.category_name }}</td>
+      <td>{{ r.due_date }}</td>
+      <td><span class="badge overdue">{{ r.days_overdue }} day{{ r.days_overdue|pluralize }}</span></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">Nothing overdue right now — the workshop is running on time.</p>
+  {% endif %}
+</div>
+{% endblock %}

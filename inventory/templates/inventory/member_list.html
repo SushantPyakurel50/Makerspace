@@ -1,0 +1,36 @@
+{% extends "inventory/base.html" %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="panel-header">
+    <div>
+      <div class="eyebrow">Table</div>
+      <h2>Members</h2>
+    </div>
+    <a class="btn" href="{% url 'member_new' %}">+ New Member</a>
+  </div>
+  {% if members %}
+  <table>
+    <tr><th>Name</th><th>Email</th><th>Type</th><th>Joined</th><th></th></tr>
+    {% for m in members %}
+    <tr>
+      <td>{{ m.full_name }}</td>
+      <td>{{ m.email }}</td>
+      <td>{{ m.get_membership_type_display }}</td>
+      <td>{{ m.join_date }}</td>
+      <td class="actions-row">
+        <a class="btn small secondary" href="{% url 'member_bookings' m.member_id %}">Bookings</a>
+        <a class="btn small secondary" href="{% url 'member_edit' m.member_id %}">Edit</a>
+        <form method="post" action="{% url 'member_delete' m.member_id %}" style="display:inline;" onsubmit="return confirm('Delete this member?');">
+          {% csrf_token %}
+          <button class="btn small danger" type="submit">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="empty">No members yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
